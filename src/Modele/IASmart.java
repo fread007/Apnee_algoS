@@ -126,9 +126,45 @@ class IASmart extends IA {
         return null;
     }
 
+//################################################################################################//
+
     int calculeH(Graphe<Tuple<Integer>> G){
-        return 1;
+        int heuristique = 0;
+
+        for (int l = 0; l < niveau.l; l++){
+            for (int c = 0; c < niveau.c; c++){
+                if (niveau.aCaisse(l,c)){
+                    int minDistCaisseBut = calculeDistMinCaisseBut(l, c);
+                    heuristique += minDistCaisseBut;
+                }
+            } 
+        }
+        return heuristique;
     }
+
+    // Pour calculer la distance min entre une caisse et chaque but
+    int calculeDistMinCaisseBut(int ligneCaisse, int colonneCaisse){
+        int distMin = Integer.MAX_VALUE;
+
+        for (int l = 0; l < niveau.l; l++) {
+            for (int c = 0; c < niveau.c; c++) {
+                if (niveau.aBut(l, c)) {
+                    int[][][] chemin = Aetoiles(ligneCaisse, colonneCaisse, l, c);
+                    
+                    if (chemin != null) {
+                        int distCaisseBut = chemin[l][c][0];
+                        distMin = Math.min(distMin, distCaisseBut);
+                    }
+                }
+            }
+        }
+        
+        // Retournez la distance minimale
+        return distMin;
+    
+    }
+
+//################################################################################################//
 
     boolean peutPouser(int l , int c){
         return (!niveau.aCaisse(l, c) && !niveau.aMur(l, c));
