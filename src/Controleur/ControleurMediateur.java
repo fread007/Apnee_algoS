@@ -64,15 +64,13 @@ public class ControleurMediateur implements CollecteurEvenements {
 
 	@Override
 	public void clicSouris(int l, int c) {
-		int dL = l - jeu.lignePousseur();
-		int dC = c - jeu.colonnePousseur();
-		int sum = dC + dL;
-		sum = sum * sum;
-		if ((dC * dL == 0) && (sum == 1))
-			deplace(dL, dC);
+		IA test;
+		test = IA.nouvelle(jeu);
+		test.niveau = jeu.niveau().clone();
+		test.testdep(l,c);
 	}
 
-	void joue(Coup cp) {
+	public void joue(Coup cp) {
 		if (cp != null) {
 			jeu.joue(cp);
 			vue.metAJourDirection(cp.dirPousseurL(), cp.dirPousseurC());

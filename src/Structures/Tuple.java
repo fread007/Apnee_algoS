@@ -1,8 +1,8 @@
 package Structures;
 
 public class Tuple<E extends Comparable<E>> implements Comparable<Tuple<E>> {
-    E first;
-    E seconde;
+    public E first;
+    public E seconde;
 
     public Tuple(E a, E b){
         first = a;

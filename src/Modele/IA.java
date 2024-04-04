@@ -30,8 +30,8 @@ import Global.Configuration;
 import Structures.Sequence;
 
 public abstract class IA {
-	private Jeu jeu;
-	Niveau niveau;
+	public Jeu jeu;
+	public Niveau niveau;
 
 	public static IA nouvelle(Jeu j) {
 		IA resultat = null;
@@ -46,6 +46,9 @@ public abstract class IA {
 				break;
 			case "ParcoursFixe":
 				resultat = new IAParcoursFixe();
+				break;
+			case "Smart" :
+				resultat = new IASmart();
 				break;
 			default:
 				Configuration.erreur("IA de type " + type + " non supportée");
@@ -63,5 +66,9 @@ public abstract class IA {
 
 	Sequence<Coup> joue() {
 		return null;
+	}
+
+	public void testdep(int l, int c){
+
 	}
 }

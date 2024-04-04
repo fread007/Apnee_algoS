@@ -3,14 +3,16 @@ package Structures;
 import Structures.*;
 
 public class Graphe<E extends Comparable<E>> implements Comparable<Graphe<E>> {
-    FAPListe<E> sommet;
-    E element;
+    public FAPListe<E> sommet;
+    public E element;
     public int distance;
+    public Graphe<E> precdent;
 
     public Graphe(E a){
         sommet = new FAPListe<E>();
         element = a;
         distance = -1;
+        precdent=null;
     }
 
     public FAPListe<E> sortSommet(){

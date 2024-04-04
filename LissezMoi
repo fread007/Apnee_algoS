@@ -1,0 +1,6 @@
+pour compiler :
+    -compiler chaque fichier java present dans src
+    -lancer java Sokoban 
+
+pour tester l'IA :
+    -clicer avec la souris sur une case 
