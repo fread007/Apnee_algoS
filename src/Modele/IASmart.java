@@ -1,7 +1,10 @@
 package Modele;
 
 import Global.Configuration;
+import Structures.FAPListe;
+import Structures.Graphe;
 import Structures.Sequence;
+import Structures.Tuple;
 
 class IASmart extends IA {
 
@@ -9,6 +12,22 @@ class IASmart extends IA {
 	public Sequence<Coup> joue() {
         Sequence<Coup> res = Configuration.nouvelleSequence();
         //a implementer
+        return res;
+    }
+
+    public Sequence<Coup> creeCoup(int[][][] chemain, Tuple<Integer> arriver){
+        Sequence<Coup> res = Configuration.nouvelleSequence();
+        Coup nvCoup = null;
+        int dL=arriver.sortF();
+        int dC=arriver.sortS();
+        nvCoup = niveau.deplace(dL,dC);
+        res.insereTete(nvCoup);
+        while(chemain[dL][dC][1]!=-1){
+            dL=chemain[dL][dC][1];
+            dL=chemain[dL][dC][2];
+            nvCoup = niveau.deplace(dL,dC);
+            res.insereTete(nvCoup);
+        }
         return res;
     }
 
@@ -103,9 +122,88 @@ class IASmart extends IA {
                 explorer[min_l-1][min_c]=true;
             }
         }
+        //renvois null si pas de chemain trouver
+        return null;
+    }
 
-        return distance;
-                
+    int calculeH(Graphe<Tuple<Integer>> G){
+        return 1;
+    }
+
+    boolean peutPouser(int l , int c){
+        return (!niveau.aCaisse(l, c) && !niveau.aMur(l, c));
+    }
+
+    //renvois le sommet si il existe si non renvois null
+    Graphe<Tuple<Integer>> existe(Sequence<Graphe<Tuple<Integer>>> sommetcree , Graphe<Tuple<Integer>> existe){
+        Sequence<Graphe<Tuple<Integer>>> copisommetcree = sommetcree;
+        Graphe<Tuple<Integer>> tmp =copisommetcree.extraitTete();
+        sommetcree.extraitTete();
+        if(tmp.compareTo(existe)==0){
+            return tmp;
+        }
+        sommetcree.insereQueue(tmp);
+        while(!sommetcree.estVide()){
+            tmp =copisommetcree.extraitTete();
+            sommetcree.extraitTete();
+            if(tmp.compareTo(existe)==0){
+                return tmp;
+            }
+            sommetcree.insereQueue(tmp);
+        }
+        return null;
+    }
+
+    public void AetoilesCasee(Graphe<Tuple<Integer>> G, Graphe<Tuple<Integer>> fin){
+        Graphe<Tuple<Integer>> min,tmp; //variable utiliser pour trouver le minimum dans traiter
+        Sequence<Graphe<Tuple<Integer>>> traiter = Configuration.nouvelleSequence();    // les sommet a traiter
+        Sequence<Graphe<Tuple<Integer>>> sommetcree = Configuration.nouvelleSequence() ; // repertori les sommet deja cree
+        //ont insert le premier sommet et ont fixe sa taille a 0
+        G.distance = 0;
+        traiter.insereQueue(G);
+        //boucle de A*
+        while(!traiter.estVide()){
+            //calcule du du sommet de traiter le plus petit
+            min=traiter.extraitTete();
+            Sequence<Graphe<Tuple<Integer>>> tmptable = Configuration.nouvelleSequence();
+            while(!traiter.estVide()){
+                tmp = traiter.extraitTete();
+                if (calculeH(min)>calculeH(tmp)){
+                    tmptable.insereQueue(min);
+                    min=tmp;
+                }
+                else{
+                    tmptable.insereQueue(tmp);
+                }
+            }
+            traiter=tmptable;
+            //le sommet a traiter est dans min
+
+            FAPListe<Tuple<Integer>> copimin = min.sortSommet();
+            FAPListe<Tuple<Integer>> copifin = fin.sortSommet();
+            boolean egal=true;
+            while (!copimin.estVide() && egal){
+                if(copimin.extrait().compareTo(copifin.extrait())!=0){
+                    egal=false;
+                }
+            }
+            if(egal){
+                //ont a trouver le chemain
+            }
+
+            //ont calcule pour ces voisin 
+            copimin=min.sortSommet();
+            while(!copimin.estVide()){
+                Tuple<Integer> voisin = copimin.extrait();
+                int [][][] resAstarstmp;
+                if(peutPouser(voisin.sortF()+1, voisin.sortS()) && ((resAstarstmp=Aetoiles(min.sortElement().sortF(), min.sortElement().sortF(),voisin.sortF()-1, voisin.sortS()))!=null)){
+                    Tuple<Integer> nvposjoueur = new Tuple<Integer>(voisin.sortF()-1, voisin.sortS());
+                    Graphe<Tuple<Integer>> straiter = new Graphe<Tuple<Integer>>(nvposjoueur);
+                    //ici lui ajouter les sommet puis tester si ont a deja le sommet , continuer algo A*
+                }
+            }
+
+        }
 
     }
     
